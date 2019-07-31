@@ -11,3 +11,9 @@ news_sites:
       homepage_article_links: '.articulo-titulo a'
       article_body: ''
       article_title: ''
+  glassdoor:
+    url: https://www.glassdoor.com/index.htm
+  
+  linkedin:
+    url: https://www.linkedin.com/jobs/search/?keywords=developer
+    post_class: ".job-card-search__link-wrapper .js-focusable .disabled .ember-view"
