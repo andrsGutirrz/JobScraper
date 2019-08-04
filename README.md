@@ -6,7 +6,7 @@ Web scraper for Job trending in Costa Rica
 If you want to run this project:
 
 ```bash
-python .\src\main.py --name filename
+python .\src\main.py --name <filename>
 ```
 
 The previous command will create a csv file on data folder
