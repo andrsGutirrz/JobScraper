@@ -21,29 +21,29 @@ def get_all_job_titles():
 
     def next_page_search(_url):
         # get the url number page
-        current_page = int(_url.split('=')[-1])
-        # Get start url
-        response = req.get(_url, headers=headers)
-        soup = bs4.BeautifulSoup(response.text, 'html.parser')
-        # concat results
-        job_list.extend([job.text.strip() for job in soup.select('.jobtitle')])
-        #prepare next link
-        last_page_url = soup.select('.pagination a')[-1]['href']
+        current_page = int(_url.split('=')[-1])        
+        last_page_url = visitingNextPage(job_list, _url)
         last_page = int(last_page_url.split('=')[-1])
+        # if next page is less than currect page
         if( last_page > current_page):
             next_url = f'{base_link}{last_page_url}'
             next_page_search(next_url)
 
     # Executing logic for first time is diferent from next calls
-    response = req.get(url, headers=headers)
-    soup = bs4.BeautifulSoup(response.text, 'html.parser')
-    job_list.extend([job.text.strip() for job in soup.select('.jobtitle')])
-    last_page_url = soup.select('.pagination a')[-1]['href']
+    last_page_url = visitingNextPage(job_list, url)
     last_page_url = f'{base_link}{last_page_url}'
 
-    #next_page_search(last_page_url)
+    next_page_search(last_page_url)
     return job_list
 
 
+def visitingNextPage(ls, _url):
+    """ Visit the url and return next url page """
+    response = req.get(_url, headers=headers)
+    soup = bs4.BeautifulSoup(response.text, 'html.parser')
+    ls.extend([{'title': job.text.strip(), 'link':'{}{}'.format(base_link, job['href']) } for job in soup.select('.jobtitle')])
+    return soup.select('.pagination a')[-1]['href']
+
+
 if __name__ == "__main__":
-    get_all_job_titles()
+    print(get_all_job_titles())
