@@ -1,0 +1,5 @@
+web_sites:
+  indeed:
+    base_link: https://cr.indeed.com
+    url_tosearch: https://cr.indeed.com/jobs?q=Developer&l=Costa+Rica
+    user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
