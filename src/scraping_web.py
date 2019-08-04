@@ -1,5 +1,5 @@
 """ In this file we scrap a web page for job open positions in CRC"""
-
+import pandas as pd
 import requests as req
 import bs4
 
@@ -61,5 +61,11 @@ def visitingJobs():
 
     return ls
 
+
+def toCSV(name='jobs'):
+    df = pd.DataFrame(visitingJobs())
+    namefile = f'data/{name}.csv'
+    df.to_csv(namefile)
+
 if __name__ == "__main__":
-    print(visitingJobs()[0])
+    print('Web scraper')
