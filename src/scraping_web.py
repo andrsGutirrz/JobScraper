@@ -33,7 +33,7 @@ def get_all_job_titles():
     last_page_url = visitingNextPage(job_list, url)
     last_page_url = f'{base_link}{last_page_url}'
 
-    #next_page_search(last_page_url)
+    next_page_search(last_page_url)
     return job_list
 
 
@@ -42,9 +42,10 @@ def visitingNextPage(ls, _url):
     response = req.get(_url, headers=headers)
     soup = bs4.BeautifulSoup(response.text, 'html.parser')
     ls.extend([{
-        'title': job.select('.title')[0].select('.jobtitle')[0].text.strip(), 
-        'link':'{}{}'.format(base_link, job.select('.title')[0].select('.jobtitle')[0]['href']) ,
-        'date': job.select('.jobsearch-SerpJobCard-footer')[0].select('.date')[0].text,
+        'title': job.select('.title')[0].select('.jobtitle')[0].text.strip() if job.select('.title') else 'notitle', 
+        'link':'{}{}'.format(base_link, job.select('.title')[0].select('.jobtitle')[0]['href']) if job.select('.title') else 'notitle' ,
+        'company': job.select('.company')[0].text.strip() if job.select('.company') else 'nocompany',
+        'location': job.select('.location')[0].text.strip() if job.select('.location') else 'nolocation',
         } for job in soup.select('.jobsearch-SerpJobCard')])
     return soup.select('.pagination a')[-1]['href']
 
@@ -55,17 +56,18 @@ def visitingJobs():
         response = req.get(job['link'])
         soup = bs4.BeautifulSoup(response.text, 'html.parser')
         # Company & location selector
-        company = soup.select('.jobsearch-InlineCompanyRating')[0].text
+        # company = soup.select('.jobsearch-InlineCompanyRating')[0].text
         description = soup.select('#jobDescriptionText')[0].text
-        ls.append({**job, 'company': company, 'description':description})
+        ls.append({**job, 'description':description})
 
     return ls
 
 
-def toCSV(name='jobs'):
+def toCSV(name='jobsa'):
     df = pd.DataFrame(visitingJobs())
     namefile = f'data/{name}.csv'
     df.to_csv(namefile)
 
 if __name__ == "__main__":
     print('Web scraper')
+    get_all_job_titles()
